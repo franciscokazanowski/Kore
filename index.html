@@ -12,17 +12,20 @@
         body {
             font-family: 'Poppins', sans-serif;
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
         
         .hero-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1975&q=80');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1975&q=80');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
         }
         
         .footer-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1534438327276-14e6d017f326?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1534438327276-14e6d017f326?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -69,9 +72,31 @@
             transition: transform 0.5s ease;
         }
         
+        /* Logo sizes */
+        .logo-vertical {
+            width: 280px;
+            height: auto;
+        }
+        
+        .logo-horizontal {
+            width: 220px;
+            height: auto;
+        }
+        
         @media (max-width: 768px) {
             .hero-bg {
                 background-position: 60% center;
+            }
+            
+            /* Logo sizes for mobile */
+            .logo-vertical {
+                width: 220px;
+                height: auto;
+            }
+            
+            .logo-horizontal {
+                width: 180px;
+                height: auto;
             }
         }
     </style>
@@ -82,8 +107,14 @@
         <!-- Navigation -->
         <nav class="px-6 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <!-- Horizontal Logo -->
-                <img src="Logo_horizontal.png" alt="Kore Fitness" class="h-10">
+                <!-- Logo Horizontal for Mobile -->
+                <div class="md:hidden">
+                    <img src="Logo_horizontal.png" alt="Kore Fitness" class="logo-horizontal">
+                </div>
+                <!-- Logo Vertical for Desktop -->
+                <div class="hidden md:block">
+                    <img src="Logo_vertical.png" alt="Kore Fitness" class="logo-vertical">
+                </div>
             </div>
             <div class="hidden md:flex space-x-6">
                 <a href="#about" class="text-white hover:text-purple-300 transition">Sobre</a>
@@ -101,6 +132,10 @@
             <button class="absolute top-4 right-4 text-white text-2xl" id="close-menu-button">
                 <i class="fas fa-times"></i>
             </button>
+            <!-- Logo in Mobile Menu -->
+            <div class="mb-12">
+                <img src="Logo_vertical.png" alt="Kore Fitness" class="logo-vertical mx-auto">
+            </div>
             <div class="flex flex-col space-y-8 text-center">
                 <a href="#about" class="text-white text-xl hover:text-purple-300 transition">Sobre</a>
                 <a href="#benefits" class="text-white text-xl hover:text-purple-300 transition">Benefícios</a>
@@ -110,7 +145,7 @@
         </div>
 
         <!-- Hero Content -->
-        <div class="flex-grow flex flex-col justify-center px-6 md:px-16 text-center">
+        <div class="flex-grow flex flex-col justify-center px-6 md:px-16 text-center relative z-10">
             <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
                 Seu treino, sua regra.
                 <br>
@@ -120,7 +155,7 @@
                 A plataforma que coloca você no controle do seu treino, com a orientação de profissionais quando precisar.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button class="primary-gradient text-white font-bold py-3 px-8 rounded-full btn-hover-animate">
+                <button class="primary-gradient text-white font-bold py-3 px-8 rounded-full btn-hover-animate" id="pre-register-btn">
                     Pré-cadastrar agora
                 </button>
                 <button class="bg-white text-purple-800 font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 btn-hover-animate">
@@ -130,19 +165,68 @@
         </div>
     </header>
 
+    <!-- Pre-register Modal -->
+    <div id="pre-register-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Pré-cadastro Kore Fitness</h3>
+            <form id="pre-register-form" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-gray-700 mb-2">Nome completo</label>
+                    <input type="text" id="name" name="name" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 mb-2">E-mail</label>
+                    <input type="email" id="email" name="email" required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                <div>
+                    <label for="phone" class="block text-gray-700 mb-2">Telefone (opcional)</label>
+                    <input type="tel" id="phone" name="phone" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                </div>
+                <button type="submit" class="w-full primary-gradient text-white font-bold py-3 px-8 rounded-full btn-hover-animate">
+                    Enviar pré-cadastro
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full text-center">
+            <div class="primary-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-white text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Pré-cadastro enviado!</h3>
+            <p class="text-gray-600 mb-6">
+                Obrigado pelo seu interesse na Kore Fitness. Em breve entraremos em contato com mais informações.
+            </p>
+            <button id="close-success-modal" class="primary-gradient text-white font-bold py-2 px-6 rounded-full btn-hover-animate">
+                Fechar
+            </button>
+        </div>
+    </div>
+
     <!-- About Section -->
     <section id="about" class="py-20 px-6 md:px-16 bg-white">
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-1/2">
-                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                         alt="Kore app interface" 
-                         class="rounded-xl shadow-xl w-full h-auto">
+                <div class="md:w-1/2 relative">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-purple-100 rounded-3xl opacity-30 -z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             alt="Kore app interface" 
+                             class="rounded-xl shadow-xl w-full h-auto">
+                    </div>
                 </div>
                 <div class="md:w-1/2">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                        Sobre a <span class="primary-gradient bg-clip-text text-transparent">Kore</span>
-                    </h2>
+                    <div class="mb-6">
+                        <img src="Logo_horizontal.png" alt="Kore Fitness" class="logo-horizontal">
+                    </div>
                     <p class="text-gray-600 mb-4">
                         A Kore é a plataforma que coloca você no controle do seu treino, permitindo que crie, gerencie e evolua seus exercícios de forma totalmente personalizada.
                     </p>
@@ -202,7 +286,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-800 mb-3">Histórico visual de treinos</h3>
                     <p class="text-gray-600">
-                        Acompanhe seu progresso com gráficos e estatísticas que mostram sua evolução ao longo do tempo.
+                        Acompanhe seu progresso com gráficos e estatísticas que show your evolution over time.
                     </p>
                 </div>
                 
@@ -213,7 +297,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-800 mb-3">Suporte direto com personal</h3>
                     <p class="text-gray-600">
-                        Conecte-se com profissionais certificados que podem ajustar seu treino e oferecer orientação personalizada.
+                        Conecte-se com professionals certificados que podem ajustar seu treino e oferecer orientação personalizada.
                     </p>
                 </div>
                 
@@ -236,27 +320,27 @@
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                    O que dizem nossos <span class="primary-gradient bg-clip-text text-transparent">usuários</span>
+                    O que dizem <span class="primary-gradient bg-clip-text text-transparent">nossos usuários</span>
                 </h2>
                 <p class="text-gray-600 max-w-2xl mx-auto">
-                    Veja como a Kore está transformando a experiência de treino de pessoas reais
+                    Veja depoimentos de pessoas que já transformaram seus treinos com a Kore
                 </p>
             </div>
             
             <div class="relative overflow-hidden">
-                <div class="flex transition-transform duration-500 ease-in-out" id="testimonial-slider">
+                <div class="flex transition-transform duration-500" id="testimonial-slider">
                     <!-- Testimonial 1 -->
                     <div class="min-w-full px-4 testimonial-slide">
-                        <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <div class="bg-gray-50 p-8 rounded-xl">
                             <div class="flex items-center mb-6">
-                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Ana" class="w-16 h-16 rounded-full object-cover mr-4">
+                                <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Ana Silva" class="w-16 h-16 rounded-full object-cover mr-4">
                                 <div>
                                     <h4 class="font-bold text-gray-800">Ana Silva</h4>
-                                    <p class="text-purple-600">Usuária Premium</p>
+                                    <p class="text-purple-600">Personal Trainer</p>
                                 </div>
                             </div>
-                            <p class="text-gray-700 italic mb-6">
-                                "Treinar nunca foi tão prático! Com a Kore, consigo montar meus treinos em casa e meu personal faz ajustes mesmo quando não estamos juntos. Revolucionou minha rotina!"
+                            <p class="text-gray-600 italic mb-6">
+                                "Como personal trainer, a Kore mudou completamente minha forma de trabalhar. Posso acompanhar meus alunos remotamente, ajustar seus treinos em tempo real e ver seu progresso com dados concretos. A plataforma é intuitiva tanto para mim quanto para eles."
                             </p>
                             <div class="flex text-yellow-400">
                                 <i class="fas fa-star"></i>
@@ -270,16 +354,16 @@
                     
                     <!-- Testimonial 2 -->
                     <div class="min-w-full px-4 testimonial-slide">
-                        <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <div class="bg-gray-50 p-8 rounded-xl">
                             <div class="flex items-center mb-6">
-                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos" class="w-16 h-16 rounded-full object-cover mr-4">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos Oliveira" class="w-16 h-16 rounded-full object-cover mr-4">
                                 <div>
-                                    <h4 class="font-bold text-gray-800">Carlos Mendes</h4>
-                                    <p class="text-purple-600">Personal Trainer</p>
+                                    <h4 class="font-bold text-gray-800">Carlos Oliveira</h4>
+                                    <p class="text-purple-600">Atleta amador</p>
                                 </div>
                             </div>
-                            <p class="text-gray-700 italic mb-6">
-                                "Como personal trainer, a Kore me permite acompanhar meus alunos de forma muito mais eficiente. Posso ajustar os treinos remotamente e ver o progresso em tempo real."
+                            <p class="text-gray-600 italic mb-6">
+                                "Depois de anos usando planilhas no Excel e anotações em cadernos, descobrir a Kore foi um divisor de águas. Finalmente posso organizar meus treinos de forma clara, acompanhar meu progresso e ainda compartilhar com meu personal quando preciso de ajustes. Recomendo para qualquer pessoa séria sobre treino."
                             </p>
                             <div class="flex text-yellow-400">
                                 <i class="fas fa-star"></i>
@@ -293,39 +377,39 @@
                     
                     <!-- Testimonial 3 -->
                     <div class="min-w-full px-4 testimonial-slide">
-                        <div class="bg-gray-50 p-8 rounded-xl shadow-md">
+                        <div class="bg-gray-50 p-8 rounded-xl">
                             <div class="flex items-center mb-6">
-                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Mariana" class="w-16 h-16 rounded-full object-cover mr-4">
+                                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Mariana Costa" class="w-16 h-16 rounded-full object-cover mr-4">
                                 <div>
                                     <h4 class="font-bold text-gray-800">Mariana Costa</h4>
-                                    <p class="text-purple-600">Usuária Free</p>
+                                    <p class="text-purple-600">Iniciante em fitness</p>
                                 </div>
                             </div>
-                            <p class="text-gray-700 italic mb-6">
-                                "Adoro a liberdade que a Kore me dá para criar meus próprios treinos. A interface é super intuitiva e os recursos de acompanhamento são incríveis. Recomendo para todos!"
+                            <p class="text-gray-600 italic mb-6">
+                                "Comecei a treinar em casa durante a pandemia e estava completamente perdida. A Kore me deu a estrutura que precisava para criar rotinas que funcionam para mim, com exercícios que consigo fazer com os equipamentos que tenho. A possibilidade de eventualmente contratar um personal para ajustar meu treino sem precisar mudar de app é incrível!"
                             </p>
                             <div class="flex text-yellow-400">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex justify-center mt-8 space-x-2">
-                    <button class="w-3 h-3 rounded-full bg-purple-300 testimonial-dot" data-index="0"></button>
-                    <button class="w-3 h-3 rounded-full bg-purple-300 testimonial-dot" data-index="1"></button>
-                    <button class="w-3 h-3 rounded-full bg-purple-300 testimonial-dot" data-index="2"></button>
+                    <button class="w-3 h-3 rounded-full bg-purple-300 testimonial-dot active-dot" data-slide="0"></button>
+                    <button class="w-3 h-3 rounded-full bg-purple-300 testimonial-dot" data-slide="1"></button>
+                    <button class="w-3 h-3 rounded-full bg-purple-300 testimonial-dot" data-slide="2"></button>
                 </div>
                 
-                <button id="prev-testimonial" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md ml-2">
-                    <i class="fas fa-chevron-left text-purple-600"></i>
+                <button id="prev-testimonial" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md text-purple-600 hover:text-purple-800">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
-                <button id="next-testimonial" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md mr-2">
-                    <i class="fas fa-chevron-right text-purple-600"></i>
+                <button id="next-testimonial" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md text-purple-600 hover:text-purple-800">
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
@@ -333,65 +417,144 @@
 
     <!-- FAQ Section -->
     <section id="faq" class="py-20 px-6 bg-gray-50">
-        <div class="max-w-3xl mx-auto">
+        <div class="max-w-4xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                     Perguntas <span class="primary-gradient bg-clip-text text-transparent">Frequentes</span>
                 </h2>
-                <p class="text-gray-600">
-                    Tire suas dúvidas sobre a plataforma Kore
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Tire suas dúvidas sobre a plataforma Kore Fitness
                 </p>
             </div>
             
             <div class="space-y-4">
                 <!-- FAQ Item 1 -->
                 <div class="accordion-item bg-white rounded-xl shadow-md overflow-hidden">
-                    <button class="accordion-header w-full text-left p-6 flex justify-between items-center">
-                        <span class="font-bold text-gray-800">Precisa pagar para usar a Kore?</span>
-                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <span class="font-bold text-gray-800">Como faço para criar meu primeiro treino na Kore?</span>
+                        <i class="fas fa-plus text-purple-600 transition-transform duration-300"></i>
                     </button>
                     <div class="accordion-content px-6">
                         <div class="pb-6 text-gray-600">
-                            A Kore oferece uma versão gratuita com funcionalidades básicas para criação e gerenciamento de treinos. Temos também planos Premium que desbloqueiam recursos avançados como acompanhamento profissional ilimitado, planos de dieta integrados e análises detalhadas de progresso.
+                            <p class="mb-4">Criar seu primeiro treino na Kore é simples:</p>
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li>Acesse a seção "Meus Treinos"</li>
+                                <li>Clique em "Novo Treino"</li>
+                                <li>Escolha um nome para seu treino e selecione os dias da semana</li>
+                                <li>Adicione exercícios pesquisando em nossa biblioteca ou criando os seus</li>
+                                <li>Defina séries, repetições, carga e intervalos</li>
+                                <li>Salve e pronto! Seu treino estará disponível para uso</li>
+                            </ol>
+                            <p class="mt-4">Você pode editar seu treino a qualquer momento ou compartilhar com um profissional para ajustes.</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- FAQ Item 2 -->
                 <div class="accordion-item bg-white rounded-xl shadow-md overflow-hidden">
-                    <button class="accordion-header w-full text-left p-6 flex justify-between items-center">
-                        <span class="font-bold text-gray-800">Como o personal trainer acessa meu treino?</span>
-                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <span class="font-bold text-gray-800">Preciso pagar para usar a Kore?</span>
+                        <i class="fas fa-plus text-purple-600 transition-transform duration-300"></i>
                     </button>
                     <div class="accordion-content px-6">
                         <div class="pb-6 text-gray-600">
-                            Você pode compartilhar seu treino diretamente com um personal trainer cadastrado na plataforma. Basta enviar um convite pelo app e o profissional terá acesso completo ao seu plano de treino, podendo fazer ajustes e comentários em tempo real. Tudo isso com total segurança e privacidade.
+                            <p>A Kore oferece uma versão gratuita com todas as funcionalidades básicas para criação e gestão de treinos. Você pode:</p>
+                            <ul class="list-disc pl-5 mt-2 space-y-1">
+                                <li>Criar e editar treinos ilimitados</li>
+                                <li>Acompanhar seu histórico de treinos</li>
+                                <li>Visualizar estatísticas básicas de progresso</li>
+                                <li>Exportar seus treinos em PDF</li>
+                            </ul>
+                            <p class="mt-4">Oferecemos também planos premium que incluem:</p>
+                            <ul class="list-disc pl-5 mt-2 space-y-1">
+                                <li>Análise avançada de progresso</li>
+                                <li>Integração com wearables (Apple Watch, Garmin, etc)</li>
+                                <li>Biblioteca de vídeos com exercícios</li>
+                                <li>Suporte prioritário</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 
                 <!-- FAQ Item 3 -->
                 <div class="accordion-item bg-white rounded-xl shadow-md overflow-hidden">
-                    <button class="accordion-header w-full text-left p-6 flex justify-between items-center">
-                        <span class="font-bold text-gray-800">A Kore funciona offline?</span>
-                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <span class="font-bold text-gray-800">Como funciona o compartilhamento com personal trainer?</span>
+                        <i class="fas fa-plus text-purple-600 transition-transform duration-300"></i>
                     </button>
                     <div class="accordion-content px-6">
                         <div class="pb-6 text-gray-600">
-                            Atualmente, a Kore requer conexão com a internet para a maioria das funcionalidades. No entanto, estamos trabalhando em um modo offline que permitirá visualizar e executar treinos pré-carregados mesmo sem conexão. Esse recurso estará disponível em breve em uma atualização futura.
+                            <p>O compartilhamento de treinos com profissionais na Kore é simples e seguro:</p>
+                            <ol class="list-decimal pl-5 mt-2 space-y-2">
+                                <li>Na página do seu treino, clique em "Compartilhar"</li>
+                                <li>Insira o e-mail ou ID do personal trainer cadastrado na Kore</li>
+                                <li>Defina as permissões (visualização ou edição)</li>
+                                <li>O profissional receberá uma notificação e poderá acessar seu treino</li>
+                                <li>Qualquer alteração feita por ele será sincronizada automaticamente</li>
+                            </ol>
+                            <p class="mt-4">Você mantém controle total e pode revogar o acesso a qualquer momento.</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- FAQ Item 4 -->
                 <div class="accordion-item bg-white rounded-xl shadow-md overflow-hidden">
-                    <button class="accordion-header w-full text-left p-6 flex justify-between items-center">
-                        <span class="font-bold text-gray-800">Posso usar a Kore em vários dispositivos?</span>
-                        <i class="fas fa-chevron-down text-purple-600 transition-transform duration-300"></i>
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <span class="font-bold text-gray-800">A Kore tem aplicativo para celular?</span>
+                        <i class="fas fa-plus text-purple-600 transition-transform duration-300"></i>
                     </button>
                     <div class="accordion-content px-6">
                         <div class="pb-6 text-gray-600">
-                            Sim! Sua conta Kore pode ser acessada em múltiplos dispositivos simultaneamente. Seus dados são sincronizados em tempo real entre todos os seus aparelhos, seja smartphone, tablet ou computador. Basta fazer login com suas credenciais em qualquer dispositivo compatível.
+                            <p>Sim! A Kore é uma plataforma 100% responsiva que funciona perfeitamente em qualquer dispositivo:</p>
+                            <ul class="list-disc pl-5 mt-2 space-y-1">
+                                <li>Navegador mobile (Chrome, Safari, etc) - acesse nosso site</li>
+                                <li>Aplicativo nativo para Android (disponível na Play Store)</li>
+                                <li>Aplicativo nativo para iOS (disponível na App Store)</li>
+                            </ul>
+                            <p class="mt-4">Todos os seus dados são sincronizados em tempo real entre dispositivos, permitindo que você comece um treino no celular e continue no computador, por exemplo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="accordion-item bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <span class="font-bold text-gray-800">Como faço para me conectar com um personal trainer?</span>
+                        <i class="fas fa-plus text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6">
+                        <div class="pb-6 text-gray-600">
+                            <p>Conectar-se com um personal trainer na Kore é fácil:</p>
+                            <ol class="list-decimal pl-5 mt-2 space-y-2">
+                                <li>Acesse a seção "Profissionais" no menu principal</li>
+                                <li>Navegue pelos perfis verificados de personal trainers</li>
+                                <li>Verifique especializações, avaliações e preços</li>
+                                <li>Selecione "Contratar" no perfil desejado</li>
+                                <li>Escolha o plano de acompanhamento (mensal, trimestral, etc)</li>
+                                <li>Após confirmação, você poderá compartilhar seus treinos e agendar consultas</li>
+                            </ol>
+                            <p class="mt-4">Todos os profissionais na plataforma são verificados e certificados.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="accordion-item bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="accordion-button w-full flex justify-between items-center p-6 text-left">
+                        <span class="font-bold text-gray-800">Quais métodos de pagamento são aceitos?</span>
+                        <i class="fas fa-plus text-purple-600 transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content px-6">
+                        <div class="pb-6 text-gray-600">
+                            <p>A Kore aceita diversos métodos de pagamento para sua conveniência:</p>
+                            <ul class="list-disc pl-5 mt-2 space-y-1">
+                                <li>Cartões de crédito (Visa, Mastercard, American Express, Elo)</li>
+                                <li>Cartões de débito</li>
+                                <li>PIX (pagamentos instantâneos)</li>
+                                <li>Boleto bancário</li>
+                                <li>PayPal (para assinaturas internacionais)</li>
+                            </ul>
+                            <p class="mt-4">Todos os pagamentos são processados de forma segura com criptografia de dados.</p>
                         </div>
                     </div>
                 </div>
@@ -400,20 +563,20 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 px-6 primary-gradient">
+    <section class="py-20 px-6 bg-gradient-to-r from-purple-800 to-blue-600">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-                Tecnologia a favor da sua evolução
+                Pronto para transformar sua experiência de treino?
             </h2>
-            <p class="text-white mb-10 text-xl">
-                Crie, compartilhe e evolua com a Kore. Transforme sua jornada fitness hoje mesmo.
+            <p class="text-xl text-purple-100 mb-10 max-w-2xl mx-auto">
+                Cadastre-se agora e comece a criar treinos personalizados que realmente funcionam para você.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button class="bg-white text-purple-800 font-bold py-3 px-8 rounded-full btn-hover-animate">
+                <button class="bg-white text-purple-800 font-bold py-3 px-8 rounded-full btn-hover-animate" id="pre-register-btn-2">
                     Pré-cadastrar agora
                 </button>
-                <button class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 btn-hover-animate">
-                    <i class="fas fa-comment-dots"></i> Fale conosco
+                <button class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full flex items-center justify-center gap-2 btn-hover-animate hover:bg-white hover:text-purple-800 transition">
+                    <i class="fas fa-play"></i> Ver demonstração
                 </button>
             </div>
         </div>
@@ -422,49 +585,59 @@
     <!-- Footer -->
     <footer class="footer-bg text-white pt-16 pb-8 px-6">
         <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
-                <div class="mb-8 md:mb-0">
-                    <!-- Vertical Logo in Footer -->
-                    <img src="Logo_vertical.png" alt="Kore Fitness" class="h-16 mb-4">
-                    <p class="max-w-md text-gray-300">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <img src="Logo_vertical.png" alt="Kore Fitness" class="logo-vertical mb-6">
+                    <p class="text-gray-300">
                         A plataforma que coloca você no controle do seu treino, com a orientação de profissionais quando precisar.
                     </p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="https://www.instagram.com/kore.br_oficial/" target="_blank" class="text-white hover:text-purple-300 transition">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                        <a href="https://www.instagram.com/kore.br_oficial/" target="_blank" class="text-white hover:text-purple-300 transition">
+                            <i class="fab fa-linkedin text-2xl"></i>
+                        </a>
+                    </div>
                 </div>
                 
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="font-bold text-lg mb-4">Links</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#about" class="text-gray-300 hover:text-white transition">Sobre</a></li>
-                            <li><a href="#benefits" class="text-gray-300 hover:text-white transition">Benefícios</a></li>
-                            <li><a href="#testimonials" class="text-gray-300 hover:text-white transition">Depoimentos</a></li>
-                            <li><a href="#faq" class="text-gray-300 hover:text-white transition">FAQ</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-bold text-lg mb-4">Legal</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-300 hover:text-white transition">Termos de uso</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white transition">Política de privacidade</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white transition">Cookies</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-bold text-lg mb-4">Social</h3>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-white transition text-xl"><i class="fab fa-youtube"></i></a>
-                        </div>
-                    </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Links Rápidos</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#about" class="text-gray-300 hover:text-white transition">Sobre a Kore</a></li>
+                        <li><a href="#benefits" class="text-gray-300 hover:text-white transition">Benefícios</a></li>
+                        <li><a href="#testimonials" class="text-gray-300 hover:text-white transition">Depoimentos</a></li>
+                        <li><a href="#faq" class="text-gray-300 hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Contato</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-purple-300"></i>
+                            <span>korebrasiloficial@gmail.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-purple-300"></i>
+                            <span>Estrada Geral<br>Garopaba - SC</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-6">Jurídico</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Termos de Uso</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Política de Cookies</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">LGPD</a></li>
+                    </ul>
                 </div>
             </div>
             
             <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
-                <p>© 2025 Kore Fitness. Todos os direitos reservados.</p>
+                <p>&copy; 2023 Kore Fitness. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
@@ -482,33 +655,87 @@
         
         closeMenuButton.addEventListener('click', () => {
             mobileMenu.classList.add('hidden');
-            document.body.style.overflow = '';
+            document.body.style.overflow = 'auto';
         });
         
         // Close mobile menu when clicking on a link
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
         mobileMenuLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
-                document.body.style.overflow = '';
+                document.body.style.overflow = 'auto';
             });
+        });
+        
+        // Pre-register Modal
+        const preRegisterBtn = document.getElementById('pre-register-btn');
+        const preRegisterBtn2 = document.getElementById('pre-register-btn-2');
+        const preRegisterModal = document.getElementById('pre-register-modal');
+        const closeModal = document.getElementById('close-modal');
+        const preRegisterForm = document.getElementById('pre-register-form');
+        const successModal = document.getElementById('success-modal');
+        const closeSuccessModal = document.getElementById('close-success-modal');
+        
+        preRegisterBtn.addEventListener('click', () => {
+            preRegisterModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        preRegisterBtn2.addEventListener('click', () => {
+            preRegisterModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            preRegisterModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        closeSuccessModal.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        preRegisterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            preRegisterModal.classList.add('hidden');
+            successModal.classList.remove('hidden');
+            
+            // Here you would typically send the form data to your backend
+            const formData = new FormData(preRegisterForm);
+            console.log('Form submitted:', Object.fromEntries(formData));
+            
+            // Reset form
+            preRegisterForm.reset();
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === preRegisterModal) {
+                preRegisterModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            if (e.target === successModal) {
+                successModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
         });
         
         // Testimonial Slider
         const slider = document.getElementById('testimonial-slider');
-        const prevButton = document.getElementById('prev-testimonial');
-        const nextButton = document.getElementById('next-testimonial');
+        const prevBtn = document.getElementById('prev-testimonial');
+        const nextBtn = document.getElementById('next-testimonial');
         const dots = document.querySelectorAll('.testimonial-dot');
         
-        let currentIndex = 0;
+        let currentSlide = 0;
         const totalSlides = document.querySelectorAll('.testimonial-slide').length;
         
         function updateSlider() {
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
             
             // Update dots
             dots.forEach((dot, index) => {
-                if (index === currentIndex) {
+                if (index === currentSlide) {
                     dot.classList.add('bg-purple-600');
                     dot.classList.remove('bg-purple-300');
                 } else {
@@ -518,81 +745,60 @@
             });
         }
         
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        prevBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
             updateSlider();
         });
         
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % totalSlides;
+        nextBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
             updateSlider();
         });
         
         // Dot navigation
-        dots.forEach(dot => {
+        dots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
-                currentIndex = parseInt(dot.getAttribute('data-index'));
+                currentSlide = index;
                 updateSlider();
             });
         });
         
-        // Auto-advance testimonials
+        // Auto slide (optional)
         setInterval(() => {
-            currentIndex = (currentIndex + 1) % totalSlides;
+            currentSlide = (currentSlide + 1) % totalSlides;
             updateSlider();
         }, 5000);
         
         // Accordion functionality
-        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        const accordionButtons = document.querySelectorAll('.accordion-button');
         
-        accordionHeaders.forEach(header => {
-            header.addEventListener('click', () => {
-                const accordionItem = header.parentElement;
-                const accordionContent = header.nextElementSibling;
-                const icon = header.querySelector('i');
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.closest('.accordion-item');
+                const content = item.querySelector('.accordion-content');
+                const icon = button.querySelector('i');
                 
-                // Toggle the accordion item
-                if (accordionContent.style.maxHeight) {
-                    accordionContent.style.maxHeight = null;
-                    icon.style.transform = 'rotate(0deg)';
+                // Toggle the active state
+                const isActive = content.style.maxHeight && content.style.maxHeight !== '0px';
+                
+                // Close all other accordion items
+                document.querySelectorAll('.accordion-content').forEach(el => {
+                    if (el !== content) {
+                        el.style.maxHeight = '0px';
+                        el.previousElementSibling.querySelector('i').classList.remove('fa-minus');
+                        el.previousElementSibling.querySelector('i').classList.add('fa-plus');
+                    }
+                });
+                
+                // Toggle current item
+                if (isActive) {
+                    content.style.maxHeight = '0px';
+                    icon.classList.remove('fa-minus');
+                    icon.classList.add('fa-plus');
                 } else {
-                    accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
-                    icon.style.transform = 'rotate(180deg)';
-                }
-            });
-        });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        // Button hover effects
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            button.addEventListener('mouseenter', () => {
-                if (button.classList.contains('btn-hover-animate')) {
-                    button.style.transform = 'translateY(-3px)';
-                    button.style.boxShadow = '0 10px 20px -10px rgba(0, 0, 0, 0.3)';
-                }
-            });
-            
-            button.addEventListener('mouseleave', () => {
-                if (button.classList.contains('btn-hover-animate')) {
-                    button.style.transform = 'translateY(0)';
-                    button.style.boxShadow = 'none';
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.classList.remove('fa-plus');
+                    icon.classList.add('fa-minus');
                 }
             });
         });
